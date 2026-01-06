@@ -95,7 +95,7 @@ class SDUST(object):
         src_train_loader = DataLoader(source_train, batch_size=self.batch_size, shuffle=True, drop_last=False)
         print(src_val_pd.shape)
 
-        # Dataset and DataLoader for unknown classes
+        # Dataset and DataLoader for source classes
         source_test = dataset(list_data=pd.DataFrame({"data": src_val_pd["data"], "label": src_val_pd["label"]}),
                                     transform=Compose([Reshape(), Normalize("0-1"), Retype()]))
         src_val_loader = DataLoader(source_test, batch_size=self.batch_size, shuffle=False, drop_last=False)
@@ -108,7 +108,7 @@ class SDUST(object):
         tgt_train_loader = DataLoader(target_train, batch_size=self.batch_size, shuffle=False, drop_last=False)
         print(tgt_val_pd.shape)
 
-        # Dataset and DataLoader for known classes
+        # Dataset and DataLoader for target classes
         target_test = dataset(list_data=pd.DataFrame({"data": tgt_val_pd["data"], "label": tgt_val_pd["label"]}),
                                    transform=Compose([Reshape(), Normalize("0-1"), Retype()]))
         tgt_val_loader = DataLoader(target_test, batch_size=self.batch_size, shuffle=False, drop_last=False)

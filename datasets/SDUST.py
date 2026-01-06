@@ -86,10 +86,9 @@ class SDUST(object):
 
     def create_loaders(self):
         num_classes = len(self.src_classes) + 1
-        unknown_labels = [label for label in range(max(self.src_classes) + 1, 10)]  # 找出源域中未包含的标签作为unknown
 
         # 获取源域数据
-        src_list_data = get_files0(self.root, self.src_name, valid_labels=self.src_classes)
+        src_list_data = get_files0(self.root, self.src_name, self.src_classes)
         data_pd = pd.DataFrame({"data": src_list_data[0], "label": src_list_data[1]})
         src_train_pd, src_val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
         source_train = dataset(list_data=src_train_pd, transform=TwoStrongTransform())
@@ -102,7 +101,7 @@ class SDUST(object):
         src_val_loader = DataLoader(source_test, batch_size=self.batch_size, shuffle=False, drop_last=False)
 
         # 获取目标域数据，包含unknown标签
-        tgt_list_data = get_files1(self.root, self.tgt_name, valid_labels=self.src_classes, unknown_labels=unknown_labels)
+        tgt_list_data = get_files1(self.root, self.tgt_name, self.tgt_classes)
         data_pd = pd.DataFrame({"data": tgt_list_data[0], "label": tgt_list_data[1]})
         tgt_train_pd, tgt_val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
         target_train = dataset(list_data=tgt_train_pd, transform=TwoStrongTransform())

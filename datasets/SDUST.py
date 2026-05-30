@@ -89,28 +89,12 @@ class SDUST(object):
 
         # 获取源域数据
         src_list_data = get_files0(self.root, self.src_name, self.src_classes)
-        data_pd = pd.DataFrame({"data": src_list_data[0], "label": src_list_data[1]})
-        src_train_pd, src_val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
-        source_train = dataset(list_data=src_train_pd, transform=TwoStrongTransform())
-        src_train_loader = DataLoader(source_train, batch_size=self.batch_size, shuffle=True, drop_last=False)
-        print(src_val_pd.shape)
 
-        # Dataset and DataLoader for source classes
-        source_test = dataset(list_data=pd.DataFrame({"data": src_val_pd["data"], "label": src_val_pd["label"]}),
-                                    transform=Compose([Reshape(), Normalize("0-1"), Retype()]))
         src_val_loader = DataLoader(source_test, batch_size=self.batch_size, shuffle=False, drop_last=False)
 
         # 获取目标域数据，包含unknown标签
         tgt_list_data = get_files1(self.root, self.tgt_name, self.tgt_classes)
-        data_pd = pd.DataFrame({"data": tgt_list_data[0], "label": tgt_list_data[1]})
-        tgt_train_pd, tgt_val_pd = train_test_split(data_pd, test_size=0.2, random_state=40, stratify=data_pd["label"])
-        target_train = dataset(list_data=tgt_train_pd, transform=TwoStrongTransform())
-        tgt_train_loader = DataLoader(target_train, batch_size=self.batch_size, shuffle=False, drop_last=False)
-        print(tgt_val_pd.shape)
 
-        # Dataset and DataLoader for target classes
-        target_test = dataset(list_data=pd.DataFrame({"data": tgt_val_pd["data"], "label": tgt_val_pd["label"]}),
-                                   transform=Compose([Reshape(), Normalize("0-1"), Retype()]))
         tgt_val_loader = DataLoader(target_test, batch_size=self.batch_size, shuffle=False, drop_last=False)
 
         return src_train_loader, tgt_train_loader, src_val_loader, tgt_val_loader, num_classes
